@@ -17,81 +17,366 @@ Includes: users, profiles, projects, proposals, contracts, messages, reviews.
    ```
    The API will be available at `http://localhost:5000/`.
 
-## Authentication
-This app uses JWTs. After login you will receive `access_token`.
-Include it in requests as: `Authorization: Bearer <token>`.
+Here’s your **TalentLink API Flow** formatted as a clean, professional `README.md` file for documentation purposes — perfect to include in your backend repo or share with your frontend/Postman team:
 
-## Endpoints (Overview)
-Base: `http://localhost:5000/api`
+---
 
-### Auth
-- `POST /api/auth/register`
-  - Body: `{ "username","email","password","role" }`
-  - role: `client` or `freelancer`
-  - Response: 201
-- `POST /api/auth/login`
-  - Body: `{ "email","password" }`
-  - Response: `{ "access_token": "<jwt>" }`
-- `GET /api/auth/me` (protected) - returns basic user info.
+# 🧩 TalentLink API – Postman Testing Guide
 
-### Profiles
-- `GET /api/profiles/<user_id>` - public profile
-- `POST /api/profiles/` (protected) - create/update profile
-  - Body example:
-    ```json
-    {
-      "full_name": "Alice",
-      "bio": "Full stack dev",
-      "skills": "python, flask, react",
-      "hourly_rate": 30,
-      "availability": "part-time",
-      "location": "Remote"
+This guide provides a simple and structured way to test the **TalentLink Backend APIs** using **Postman**, with sample requests and responses for both **Clients** and **Freelancers**.
+
+---
+
+## 🚀 Base Configuration
+
+| Key                | Value                   |
+| ------------------ | ----------------------- |
+| **Base URL**       | `http://127.0.0.1:5000` |
+| **Content-Type**   | `application/json`      |
+| **Authentication** | JWT Token (Bearer)      |
+
+---
+
+## 🧑‍💼 1. Client Flow
+
+### 1.1 Register Client
+
+**Request**
+
+```http
+POST {{base_url}}/api/auth/register
+Content-Type: application/json
+```
+
+**Body**
+
+```json
+{
+    "username": "client_user",
+    "email": "client@example.com",
+    "password": "clientpass123",
+    "role": "client"
+}
+```
+
+**Response**
+
+```json
+{
+    "message": "registered"
+}
+```
+
+---
+
+### 1.2 Login Client
+
+**Request**
+
+```http
+POST {{base_url}}/api/auth/login
+Content-Type: application/json
+```
+
+**Body**
+
+```json
+{
+    "email": "client@example.com",
+    "password": "clientpass123"
+}
+```
+
+**Response**
+
+```json
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+> 💡 Save this token as `client_token` in your Postman environment.
+
+---
+
+### 1.3 Create Project
+
+**Request**
+
+```http
+POST {{base_url}}/api/projects
+Content-Type: application/json
+Authorization: Bearer {{client_token}}
+```
+
+**Body**
+
+```json
+{
+    "title": "E-commerce Website",
+    "description": "Need a full-stack e-commerce website with payment integration",
+    "budget": 2500,
+    "duration": "3 months",
+    "skills_required": "React, Node.js, MongoDB, Stripe"
+}
+```
+
+**Response**
+
+```json
+{
+    "message": "project created successfully",
+    "project": {
+        "id": 1,
+        "title": "E-commerce Website",
+        "description": "Need a full-stack e-commerce website with payment integration",
+        "budget": 2500.0,
+        "duration": "3 months",
+        "skills_required": "React, Node.js, MongoDB, Stripe",
+        "status": "active",
+        "client_id": 1,
+        "created_at": "2025-10-24T11:30:00.000000"
     }
-    ```
+}
+```
 
-### Projects
-- `GET /api/projects/` - list projects
-- `POST /api/projects/` (protected, client only) - create project
-  - Body: `{ "title", "description", "budget", "duration", "skills_required" }`
-- `GET /api/projects/<id>` - get project detail
+---
 
-### Proposals
-- `POST /api/proposals/<project_id>` (protected, freelancer only)
-  - Body: `{ "cover_letter", "proposed_rate" }`
-- `GET /api/proposals/project/<project_id>` - list proposals for a project
-- `PUT /api/proposals/<proposal_id>/status` (protected, client only)
-  - Body: `{ "status": "accepted" | "rejected" }`
+### 1.4 View Project Proposals
 
-### Contracts
-- `POST /api/contracts/` (protected, client only)
-  - Body: `{ "proposal_id", "start_date", "end_date" }`
-- `GET /api/contracts/<id>` (protected)
+**Request**
 
-### Messages
-- `POST /api/messages/send` (protected)
-  - Body: `{ "receiver_id", "content" }`
-- `GET /api/messages/thread/<user_id>` (protected)
-  - Get conversation between current user and `<user_id>`
+```http
+GET {{base_url}}/api/proposals/project/1
+Authorization: Bearer {{client_token}}
+```
 
-### Reviews
-- `POST /api/reviews/` (protected)
-  - Body: `{ "contract_id", "rating", "comment" }` (rating integer)
+**Response**
 
-## Notes for Frontend
-- Prefix all API calls with `/api`.
-- After login save the `access_token` in memory (not localStorage if you can avoid; if using localStorage, be careful).
-- Attach Authorization header: `Authorization: Bearer <access_token>`.
-- The app is minimal — please add client-side validation and error handling for HTTP 4xx responses.
-- For real-time messaging consider adding WebSocket (Flask-SocketIO) or polling every few seconds.
+```json
+[
+    {
+        "id": 1,
+        "project_id": 1,
+        "freelancer": {
+            "id": 2,
+            "username": "dev_expert",
+            "email": "dev@example.com"
+        },
+        "cover_letter": "I have 5+ years of experience with MERN stack...",
+        "proposed_rate": 2200.0,
+        "status": "pending",
+        "created_at": "2025-10-24T11:35:00.000000"
+    }
+]
+```
 
-## Upgrading to Production
-- Switch to PostgreSQL by setting `DATABASE_URL` environment variable.
-- Use Gunicorn + Nginx, enable HTTPS, rotate secrets.
-- Add migrations (Flask-Migrate / Alembic).
-- Harden JWT (access + refresh tokens), rate-limit endpoints, validate inputs more strictly.
+---
 
-## File map
-- `app.py` - app factory and blueprint registration
-- `models.py` - SQLAlchemy models
-- `routes/` - blueprints for each module
-- `requirements.txt` - python deps
+### 1.5 Accept or Reject Proposal
+
+**Request**
+
+```http
+PUT {{base_url}}/api/proposals/1/status
+Content-Type: application/json
+Authorization: Bearer {{client_token}}
+```
+
+**Body**
+
+```json
+{
+    "status": "accepted"
+}
+```
+
+**Response**
+
+```json
+{
+    "message": "proposal accepted successfully",
+    "proposal_id": 1,
+    "status": "accepted"
+}
+```
+
+---
+
+## 👨‍💻 2. Freelancer Flow
+
+### 2.1 Register Freelancer
+
+**Request**
+
+```http
+POST {{base_url}}/api/auth/register
+Content-Type: application/json
+```
+
+**Body**
+
+```json
+{
+    "username": "dev_expert",
+    "email": "dev@example.com",
+    "password": "devpass123",
+    "role": "freelancer"
+}
+```
+
+**Response**
+
+```json
+{
+    "message": "registered"
+}
+```
+
+---
+
+### 2.2 Login Freelancer
+
+**Request**
+
+```http
+POST {{base_url}}/api/auth/login
+Content-Type: application/json
+```
+
+**Body**
+
+```json
+{
+    "email": "dev@example.com",
+    "password": "devpass123"
+}
+```
+
+**Response**
+
+```json
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+> 💡 Save this token as `freelancer_token` in your Postman environment.
+
+---
+
+### 2.3 Browse Available Projects
+
+**Request**
+
+```http
+GET {{base_url}}/api/projects
+Authorization: Bearer {{freelancer_token}}
+```
+
+**Response**
+
+```json
+[
+    {
+        "id": 1,
+        "title": "E-commerce Website",
+        "description": "Need a full-stack e-commerce website with payment integration",
+        "budget": 2500.0,
+        "duration": "3 months",
+        "skills_required": "React, Node.js, MongoDB, Stripe",
+        "client_id": 1,
+        "status": "active",
+        "created_at": "2025-10-24T11:30:00.000000"
+    }
+]
+```
+
+---
+
+### 2.4 Submit Proposal
+
+**Request**
+
+```http
+POST {{base_url}}/api/proposals/1
+Content-Type: application/json
+Authorization: Bearer {{freelancer_token}}
+```
+
+**Body**
+
+```json
+{
+    "cover_letter": "I have 5+ years of experience with MERN stack and have built several e-commerce platforms. I can deliver this project within your timeline.",
+    "proposed_rate": 2200.0
+}
+```
+
+**Response**
+
+```json
+{
+    "message": "proposal submitted",
+    "id": 1,
+    "status": "pending",
+    "created_at": "2025-10-24T11:35:00.000000"
+}
+```
+
+---
+
+### 2.5 Check Proposal Status
+
+**Request**
+
+```http
+GET {{base_url}}/api/proposals
+Authorization: Bearer {{freelancer_token}}
+```
+
+**Response**
+
+```json
+[
+    {
+        "id": 1,
+        "project": {
+            "id": 1,
+            "title": "E-commerce Website",
+            "budget": 2500.0,
+            "status": "active"
+        },
+        "cover_letter": "I have 5+ years of experience...",
+        "proposed_rate": 2200.0,
+        "status": "accepted",
+        "created_at": "2025-10-24T11:35:00.000000"
+    }
+]
+```
+
+---
+
+## ⚙️ Postman Environment Variables
+
+| Variable           | Description                            |
+| ------------------ | -------------------------------------- |
+| `base_url`         | API base URL (`http://127.0.0.1:5000`) |
+| `client_token`     | Set after client login                 |
+| `freelancer_token` | Set after freelancer login             |
+| `project_id`       | Auto-set after project creation        |
+| `proposal_id`      | Auto-set after proposal submission     |
+
+---
+
+## ⚠️ Important Notes
+
+1. Always include the **JWT token** in the `Authorization` header for protected routes.
+2. Use `application/json` as **Content-Type** for all POST/PUT requests.
+3. Handle errors gracefully — check for response codes (`400`, `401`, `403`, `404`, `500`).
+4. Ensure your Flask server is running locally before testing.
+5. You can easily import all these requests into a **Postman Collection** for end-to-end testing.
+
+---
+
+Would you like me to generate this as a ready-to-download `README.md` file (with proper Markdown formatting and emojis preserved)?
