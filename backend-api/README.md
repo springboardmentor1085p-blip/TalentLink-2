@@ -367,16 +367,4 @@ Authorization: Bearer {{freelancer_token}}
 | `project_id`       | Auto-set after project creation        |
 | `proposal_id`      | Auto-set after proposal submission     |
 
----
 
-## ⚠️ Important Notes
-
-1. Always include the **JWT token** in the `Authorization` header for protected routes.
-2. Use `application/json` as **Content-Type** for all POST/PUT requests.
-3. Handle errors gracefully — check for response codes (`400`, `401`, `403`, `404`, `500`).
-4. Ensure your Flask server is running locally before testing.
-5. You can easily import all these requests into a **Postman Collection** for end-to-end testing.
-
----
-
-Would you like me to generate this as a ready-to-download `README.md` file (with proper Markdown formatting and emojis preserved)?
