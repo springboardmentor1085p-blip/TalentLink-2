@@ -29,10 +29,14 @@ def login():
     user = User.query.filter_by(email=data['email']).first()
     if not user or not check_password_hash(user.password, data['password']):
         return jsonify({'error': 'invalid credentials'}), 401
+<<<<<<< HEAD
     token = create_access_token(
         identity=str(user.id),
         additional_claims={"role": user.role}
     )
+=======
+    token = create_access_token(identity={'id': user.id, 'role': user.role})
+>>>>>>> main
     return jsonify({'access_token': token}), 200
 
 @auth_bp.route('/me', methods=['GET'])

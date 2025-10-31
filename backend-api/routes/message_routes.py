@@ -8,10 +8,14 @@ message_bp = Blueprint('message', __name__)
 # --------------------------------------------
 # Send a message (authenticated users only)
 # --------------------------------------------
+
+message_bp = Blueprint('message', __name__)
+
 @message_bp.route('/send', methods=['POST'])
 @jwt_required()
 def send_message():
     ident = get_jwt_identity()
+
 
     # ✅ Handle both string and dict identities
     if isinstance(ident, dict):
@@ -54,11 +58,20 @@ def send_message():
 # --------------------------------------------
 # Get all messages between logged-in user and another user
 # --------------------------------------------
+    data = request.get_json() or {}
+    if not data.get('receiver_id') or not data.get('content'):
+        return jsonify({'error': 'receiver_id and content required'}), 400
+    # simple send
+    m = Message(sender_id=ident['id'], receiver_id=data['receiver_id'], content=data['content'])
+    db.session.add(m)
+    db.session.commit()
+    return jsonify({'message': 'sent', 'id': m.id}), 201
+
+
 @message_bp.route('/thread/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_thread(user_id):
     ident = get_jwt_identity()
-
     # ✅ Handle both string and dict identities
     if isinstance(ident, dict):
         current_user_id = ident.get('id')
@@ -108,3 +121,16 @@ def get_inbox():
             'timestamp': msg.timestamp.isoformat()
         } for msg in msgs
     ]), 200
+
+    # fetch messages between current user and user_id
+    msgs = Message.query.filter(
+        ((Message.sender_id==ident['id']) & (Message.receiver_id==user_id)) |
+        ((Message.sender_id==user_id) & (Message.receiver_id==ident['id']))
+    ).order_by(Message.timestamp.asc()).all()
+    return jsonify([{
+        'id': mm.id,
+        'sender_id': mm.sender_id,
+        'receiver_id': mm.receiver_id,
+        'content': mm.content,
+        'timestamp': mm.timestamp.isoformat()
+    } for mm in msgs]), 200

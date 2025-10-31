@@ -7,6 +7,10 @@ from config import Config
 from datetime import datetime
 
 # Import your route blueprints
+from models import db
+from config import Config
+
+# Blueprints
 from routes.auth_routes import auth_bp
 from routes.profile_routes import profile_bp
 from routes.project_routes import project_bp
@@ -15,9 +19,9 @@ from routes.contract_routes import contract_bp
 from routes.message_routes import message_bp
 from routes.review_routes import review_bp
 
-# ---------------------------------------------
 # APP FACTORY
 # ---------------------------------------------
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -25,7 +29,6 @@ def create_app():
     db.init_app(app)
     JWTManager(app)
 
-    # Register all blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(profile_bp, url_prefix='/api/profiles')
     app.register_blueprint(project_bp, url_prefix='/api/projects')
@@ -39,7 +42,6 @@ def create_app():
         return jsonify({'message': 'TalentLink API running'})
 
     return app
-
 
 # ---------------------------------------------
 # MAIN SOCKET.IO LOGIC
@@ -111,3 +113,10 @@ if __name__ == '__main__':
 
     print("🚀 TalentLink API + SocketIO server running at http://127.0.0.1:5000")
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+
+if __name__ == '__main__':
+    app = create_app()
+    with app.app_context():
+        db.create_all()
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
