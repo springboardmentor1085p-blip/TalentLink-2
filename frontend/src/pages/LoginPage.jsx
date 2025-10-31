@@ -18,7 +18,8 @@ function LoginPage() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       alert(res.data.message);
-      navigate("/"); // redirect to homepage or dashboard
+      navigate("/client-dashboard");
+ // redirect to homepage or dashboard
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

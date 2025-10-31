@@ -8,6 +8,8 @@ import ProjectListPage from './pages/ProjectListPage.jsx';
 import ProjectDetailPage from './pages/ProjectDetailPage.jsx';
 import CreateProjectPage from './pages/CreateProjectPage.jsx';
 import ClientDashboardPage from './pages/ClientDashboardPage.jsx';
+import MessagesPage from './pages/MessagePage.jsx';
+import ProfilePage from './pages/profilePage.jsx';
 
 function App() {
   return (
@@ -25,6 +27,9 @@ function App() {
         {/* Client Routes */}
         <Route path="dashboard" element={<ClientDashboardPage />} />
         <Route path="create-project" element={<CreateProjectPage />} />
+        <Route path="messages" element={<MessagesPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        
       </Route>
     </Routes>
   );
