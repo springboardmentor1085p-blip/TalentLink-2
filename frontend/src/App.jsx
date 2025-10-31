@@ -10,6 +10,7 @@ import CreateProjectPage from './pages/CreateProjectPage.jsx';
 import ClientDashboardPage from './pages/ClientDashboardPage.jsx';
 import MessagesPage from './pages/MessagePage.jsx';
 import ProfilePage from './pages/profilePage.jsx';
+import FreelancerMessagePage from "./pages/freelancerMessage.jsx";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         {/* Freelancer Routes */}
         <Route path="projects" element={<ProjectListPage />} />
         <Route path="project/:id" element={<ProjectDetailPage />} />
+        <Route path="/freelancer/messages" element={<FreelancerMessagePage />} />
+        
 
         {/* Client Routes */}
         <Route path="dashboard" element={<ClientDashboardPage />} />

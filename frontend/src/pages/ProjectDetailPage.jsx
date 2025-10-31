@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Tag,
   DollarSign,
-  ClipboardText, // Note: This icon was imported but not used, I'll keep it in case you need it.
+  // ClipboardText, // Note: This icon was imported but not used, I'll keep it in case you need it.
   User,
   Clock,
   ArrowLeft,
