@@ -1,6 +1,56 @@
 import React from "react";
 
-export default function Home() {
+export default function HomePage() {
+  const categories = [
+    {
+      name: "Web Development",
+      img: "https://images.unsplash.com/photo-1522205408450-add114ad53fe?auto=format&fit=crop&w=800&q=60",
+    },
+    {
+      name: "Graphic Design",
+      img: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=60",
+    },
+    {
+      name: "Content Writing",
+      img: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=60",
+    },
+    {
+      name: "Digital Marketing",
+      img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60",
+    },
+    {
+      name: "Video Editing",
+      img: "https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?auto=format&fit=crop&w=800&q=60",
+    },
+    {
+      name: "App Development",
+      img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=60",
+    },
+  ];
+
+  const freelancers = [
+    {
+      name: "Aarav Sharma",
+      skill: "Web Developer",
+      img: "https://images.unsplash.com/photo-1603415526960-f7e0328d0f5b?auto=format&fit=crop&w=600&q=60",
+    },
+    {
+      name: "Priya Desai",
+      skill: "Graphic Designer",
+      img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=60",
+    },
+    {
+      name: "Rohan Gupta",
+      skill: "Content Writer",
+      img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=60",
+    },
+    {
+      name: "Ananya Verma",
+      skill: "Video Editor",
+      img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=60",
+    },
+  ];
+
   return (
     <div className="home-container">
       {/* HERO SECTION */}
@@ -27,34 +77,9 @@ export default function Home() {
       <section className="categories">
         <h2>Popular Categories</h2>
         <div className="category-grid">
-          {[
-            {
-              name: "Web Development",
-              img: "https://images.unsplash.com/photo-1522205408450-add114ad53fe",
-            },
-            {
-              name: "Graphic Design",
-              img: "https://images.unsplash.com/photo-1503602642458-232111445657",
-            },
-            {
-              name: "Content Writing",
-              img: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2",
-            },
-            {
-              name: "Digital Marketing",
-              img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-            },
-            {
-              name: "Video Editing",
-              img: "https://images.unsplash.com/photo-1516251193007-45ef944ab0c6",
-            },
-            {
-              name: "App Development",
-              img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-            },
-          ].map((cat, i) => (
+          {categories.map((cat, i) => (
             <div className="category-card" key={i}>
-              <img src={cat.img} alt={cat.name} />
+              <img src={cat.img} alt={cat.name} loading="lazy" />
               <div className="category-info">
                 <h3>{cat.name}</h3>
               </div>
@@ -71,6 +96,7 @@ export default function Home() {
             <img
               src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="Verified Talent"
+              loading="lazy"
             />
             <h3>Verified Talent</h3>
             <p>Every freelancer is verified and skilled.</p>
@@ -79,6 +105,7 @@ export default function Home() {
             <img
               src="https://cdn-icons-png.flaticon.com/512/3208/3208707.png"
               alt="Secure Payments"
+              loading="lazy"
             />
             <h3>Secure Payments</h3>
             <p>Pay safely through our escrow system.</p>
@@ -87,6 +114,7 @@ export default function Home() {
             <img
               src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png"
               alt="24/7 Support"
+              loading="lazy"
             />
             <h3>24/7 Support</h3>
             <p>Our support team is available anytime, anywhere.</p>
@@ -98,30 +126,9 @@ export default function Home() {
       <section className="freelancers">
         <h2>Featured Freelancers</h2>
         <div className="freelancer-grid">
-          {[
-            {
-              name: "Aarav Sharma",
-              skill: "Web Developer",
-              img: "https://images.unsplash.com/photo-1603415526960-f7e0328d0f5b",
-            },
-            {
-              name: "Priya Desai",
-              skill: "Graphic Designer",
-              img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-            },
-            {
-              name: "Rohan Gupta",
-              skill: "Content Writer",
-              img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c",
-            },
-            {
-              name: "Ananya Verma",
-              skill: "Video Editor",
-              img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
-            },
-          ].map((f, i) => (
+          {freelancers.map((f, i) => (
             <div className="freelancer-card" key={i}>
-              <img src={f.img} alt={f.name} />
+              <img src={f.img} alt={f.name} loading="lazy" />
               <h3>{f.name}</h3>
               <p>{f.skill}</p>
             </div>
@@ -129,9 +136,7 @@ export default function Home() {
         </div>
       </section>
 
-      
-
-      {/* INLINE CSS STYLING */}
+      {/* --- STATIC CSS OPTIMIZED --- */}
       <style>{`
         .home-container {
           font-family: 'Poppins', sans-serif;
@@ -150,9 +155,10 @@ export default function Home() {
           color: #fff;
           text-align: center;
           position: relative;
+          overflow: hidden;
         }
         .hero::after {
-          content: "";
+          content: '';
           position: absolute;
           inset: 0;
           background: rgba(0, 0, 0, 0.55);
@@ -195,9 +201,11 @@ export default function Home() {
           border-radius: 5px;
           font-weight: 600;
           cursor: pointer;
+          transition: all 0.3s ease;
         }
         .search-bar button:hover {
           background: #17a864;
+          transform: translateY(-2px);
         }
 
         /* CATEGORIES */
@@ -226,6 +234,7 @@ export default function Home() {
         }
         .category-card:hover {
           transform: translateY(-5px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .category-card img {
           width: 100%;
@@ -308,9 +317,6 @@ export default function Home() {
         .freelancer-card p {
           color: #666;
           font-size: 0.9rem;
-        }
-
-       
         }
       `}</style>
     </div>
