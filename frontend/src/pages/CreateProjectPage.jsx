@@ -1,120 +1,123 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { ArrowLeft, FileText, Tag, DollarSign } from "lucide-react";
 
 const CreateProjectPage = () => {
-  // State variables to store form data
-  const [title, setTitle] = useState(""); // Project title
-  const [description, setDescription] = useState(""); // Short project description
-  const [category, setCategory] = useState(""); // Project category
-  const [budget, setBudget] = useState(""); // Budget entered by user
-  const [message, setMessage] = useState(""); // Feedback message (success or error)
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    category: "",
+    budget: "",
+  });
 
-  // Function to handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevents page reload on form submit
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    try {
-      // Sending project data to backend API
-      const response = await axios.post("http://127.0.0.1:5000/create_project", {
-        title,
-        description,
-        category,
-        budget,
-      });
-
-      // If successful, show success message
-      setMessage("✅ Project created successfully!");
-      console.log("Server Response:", response.data);
-
-      // Clear the form fields
-      setTitle("");
-      setDescription("");
-      setCategory("");
-      setBudget("");
-    } catch (error) {
-      // If error occurs, display error message
-      console.error("Error creating project:", error);
-      setMessage("❌ Failed to create project. Please try again.");
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("✅ Project created:", formData);
+    alert("🎉 Project created successfully!");
+    setFormData({ title: "", description: "", category: "", budget: "" });
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      {/* Main container card */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg">
-        {/* Page heading */}
-        <h2 className="text-2xl font-bold mb-6 text-center">Create a New Project</h2>
+    <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-inter">
+      <div className="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-2xl border border-gray-200">
+        {/* Back Button */}
+        <button
+          onClick={() => window.history.back()}
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition"
+        >
+          <ArrowLeft size={18} />
+          <span className="font-semibold">Back</span>
+        </button>
 
-        {/* Feedback message */}
-        {message && (
-          <p
-            className={`text-center mb-4 ${
-              message.includes("✅") ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {message}
-          </p>
-        )}
+        {/* Header */}
+        <h1 className="text-4xl font-bold mb-8 text-black tracking-tight">
+          Create a <span className="text-blue-600">New Project</span>
+        </h1>
 
-        {/* Project creation form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title input field */}
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-7">
+          {/* Project Title */}
           <div>
-            <label className="block text-gray-700 mb-1">Project Title</label>
-            <input
-              type="text"
-              placeholder="Enter project title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <label className="block text-sm font-semibold text-black mb-2">
+              Project Title
+            </label>
+            <div className="flex items-center border rounded-lg px-3 py-2 bg-gray-100 focus-within:ring-2 focus-within:ring-blue-500">
+              <FileText className="text-blue-600 mr-2" size={18} />
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="e.g. E-commerce Website Redesign"
+                className="w-full bg-transparent outline-none text-black placeholder-gray-500"
+                required
+              />
+            </div>
           </div>
 
-          {/* Description input field */}
+          {/* Description */}
           <div>
-            <label className="block text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-semibold text-black mb-2">
+              Description
+            </label>
             <textarea
-              placeholder="Enter project description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Describe your project in detail..."
+              rows={5}
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 outline-none text-black placeholder-gray-500 focus:ring-2 focus:ring-blue-500 resize-none"
               required
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            ></textarea>
           </div>
 
-          {/* Category input field */}
+          {/* Category */}
           <div>
-            <label className="block text-gray-700 mb-1">Category</label>
-            <input
-              type="text"
-              placeholder="Enter category (e.g., Web Dev, AI, Design)"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              required
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <label className="block text-sm font-semibold text-black mb-2">
+              Category
+            </label>
+            <div className="flex items-center border rounded-lg px-3 py-2 bg-gray-100 focus-within:ring-2 focus-within:ring-blue-500">
+              <Tag className="text-blue-600 mr-2" size={18} />
+              <input
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                placeholder="e.g. Web Development, UI/UX Design"
+                className="w-full bg-transparent outline-none text-black placeholder-gray-500"
+                required
+              />
+            </div>
           </div>
 
-          {/* Budget input field */}
+          {/* Budget */}
           <div>
-            <label className="block text-gray-700 mb-1">Budget (₹)</label>
-            <input
-              type="number"
-              placeholder="Enter budget"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              required
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <label className="block text-sm font-semibold text-black mb-2">
+              Budget (₹)
+            </label>
+            <div className="flex items-center border rounded-lg px-3 py-2 bg-gray-100 focus-within:ring-2 focus-within:ring-blue-500">
+              <DollarSign className="text-blue-600 mr-2" size={18} />
+              <input
+                type="number"
+                name="budget"
+                value={formData.budget}
+                onChange={handleChange}
+                placeholder="Enter your project budget"
+                className="w-full bg-transparent outline-none text-black placeholder-gray-500"
+                required
+              />
+            </div>
           </div>
 
-          {/* Submit button */}
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-transform transform hover:scale-[1.02] shadow-md"
           >
-            Create Project
+            🚀 Submit Project
           </button>
         </form>
       </div>
